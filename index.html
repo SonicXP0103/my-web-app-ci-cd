@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔法森林大冒險 - 測試版</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #e0f7fa;
+            color: #004d40;
+            margin: 0;
+        }
+        h1 {
+            color: #00796b;
+            animation: fadeIn 2s;
+        }
+        p {
+            font-size: 1.2em;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.6;
+            animation: slideIn 2s;
+        }
+        .version {
+            margin-top: 20px;
+            font-style: italic;
+            color: #26a69a;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>歡迎來到 魔法森林大冒險！</h1>
+    <p>
+        這是我們遊戲的最新測試版本！透過 CI/CD 自動化部署，您可以隨時體驗到最新的遊戲進度。
+        請密切關注我們的開發，更多精彩內容即將登場！
+    </p>
+    <p class="version">
+        <span id="version-info">測試版 1.0.0</span>
+    </p>
+    <script>
+        // 你可以想像這裡以後會放一些遊戲相關的 JavaScript 程式碼
+        // 例如：載入遊戲資源、初始化遊戲引擎等等
+        console.log("網頁版遊戲測試中...");
+
+        // 簡單的更新版本號模擬，讓你可以看到 CI/CD 效果
+        const versionElement = document.getElementById('version-info');
+        // 每次部署時，假設我們可以自動更新這個版本號
+        // 實際 CI/CD 中，這部分可以透過腳本自動生成
+        const now = new Date();
+        versionElement.innerText = `測試版 <span class="math-inline">\{now\.getFullYear\(\)\}\.</span>{now.getMonth() + 1}.${now.getDate()} - <span class="math-inline">\{now\.getHours\(\)\}\:</span>{now.getMinutes()}`;
+    </script>
+</body>
+</html>
