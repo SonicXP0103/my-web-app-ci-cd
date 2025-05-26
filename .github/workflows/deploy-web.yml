@@ -1,3 +1,9 @@
+name: 部署魔法森林大冒險網頁
+
+on:
+  push:
+    branches: [ main ] # 當程式碼推送到 main 分支時觸發
+
 # deploy-web.yml 檔案 (部分內容)
 jobs:
   deploy:
