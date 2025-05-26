@@ -4,24 +4,26 @@ on:
   push:
     branches: [ main ] # 當程式碼推送到 main 分支時觸發
 
-# deploy-web.yml 檔案 (部分內容)
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # ... 其他步驟不變 ...
+      - uses: actions/checkout@v4 # 檢查出你的儲存庫程式碼
 
-      - name: (模擬) 建置網頁檔案 (並嵌入版本類型)
-        # 在這個步驟層級定義一個環境變數
+      - name: (模擬) 建置網頁檔案 (並嵌入版本類型與 API Key)
         env:
           GAME_VERSION_TYPE: "測試版" # 你可以在這裡改成 "正式版" 試試
+          MY_GAME_API_KEY: ${{ secrets.API_KEY_GAME_SERVER }} # 引用我們剛剛設定的 Secret
         run: |
           echo "模擬網頁檔案建置中..."
           # 將環境變數的值寫入一個臨時文件，模擬建置結果
           echo "<h1>歡迎來到 魔法森林大冒險！ - ${GAME_VERSION_TYPE}</h1>" > index_temp.html
           echo "<p>這是我們遊戲的 ${GAME_VERSION_TYPE}！</p>" >> index_temp.html
-          # 模擬將真實的 index.html 替換掉，以便部署時讀取這個帶有變數的新內容
-          cat index_temp.html >> index.html # 將臨時內容追加到 index.html
+          echo "<p>遊戲伺服器 API Key (實際應用中不會顯示): ${MY_GAME_API_KEY}</p>" >> index_temp.html
+          
+          # *** 重點修正：使用 mv 覆蓋原始的 index.html ***
+          mv index_temp.html index.html 
+          
           echo "建置完成，準備部署！"
           cat index.html # 打印出最終的 index.html 內容，方便日誌查看
 
