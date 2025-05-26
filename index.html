@@ -62,7 +62,7 @@
         // 每次部署時，假設我們可以自動更新這個版本號
         // 實際 CI/CD 中，這部分可以透過腳本自動生成
         const now = new Date();
-        versionElement.innerText = `測試版 ${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()} - ${now.getHours()}:${now.getMinutes()}`;
+        versionElement.innerText = `測試版 ${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()} - ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
     </script>
 </body>
 </html>

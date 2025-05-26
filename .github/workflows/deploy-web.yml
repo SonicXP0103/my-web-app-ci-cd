@@ -1,32 +1,26 @@
-name: 部署魔法森林大冒險網頁
-
-on:
-  push:
-    branches: [ main ] # 當程式碼推送到 main 分支時觸發
-
+# deploy-web.yml 檔案 (部分內容)
 jobs:
-  deploy: # 這個任務名稱
-    runs-on: ubuntu-latest # 在 Ubuntu 虛擬機上執行
-
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-      - name: 檢查程式碼
-        uses: actions/checkout@v4
+      # ... 其他步驟不變 ...
 
-      - name: 設定 Node.js (用於未來可能的網頁打包工具)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20 # 使用 Node.js 20 版本
-
-      - name: (模擬) 建置網頁檔案 (如果未來有複雜的網頁框架，這裡會執行建置指令)
+      - name: (模擬) 建置網頁檔案 (並嵌入版本類型)
+        # 在這個步驟層級定義一個環境變數
+        env:
+          GAME_VERSION_TYPE: "測試版" # 你可以在這裡改成 "正式版" 試試
         run: |
           echo "模擬網頁檔案建置中..."
-          # 對於簡單的 index.html，實際上不需要複雜的建置步驟
-          # 但如果未來使用 React, Vue, Angular 等框架，這裡會是 npm run build
+          # 將環境變數的值寫入一個臨時文件，模擬建置結果
+          echo "<h1>歡迎來到 魔法森林大冒險！ - ${GAME_VERSION_TYPE}</h1>" > index_temp.html
+          echo "<p>這是我們遊戲的 ${GAME_VERSION_TYPE}！</p>" >> index_temp.html
+          # 模擬將真實的 index.html 替換掉，以便部署時讀取這個帶有變數的新內容
+          cat index_temp.html >> index.html # 將臨時內容追加到 index.html
           echo "建置完成，準備部署！"
+          cat index.html # 打印出最終的 index.html 內容，方便日誌查看
 
       - name: 部署到 GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4 # 使用一個專門用於部署到 GitHub Pages 的 Action
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # GitHub 提供的自動驗證 token
-          publish_dir: ./ # 告訴 Action 要部署哪個資料夾的內容，這裡指專案根目錄
-          # CNAME: your-custom-domain.com # 如果你有自己的網域，可以取消註解這一行並填入
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
