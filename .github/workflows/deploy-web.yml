@@ -12,7 +12,7 @@ jobs:
 
       - name: (模擬) 建置網頁檔案 (並嵌入版本類型與 API Key)
         env:
-          GAME_VERSION_TYPE: "測試版" # 你可以在這裡改成 "正式版" 試試
+          GAME_VERSION_TYPE: "正式版" # 你可以在這裡改成 "正式版" 試試
           MY_GAME_API_KEY: ${{ secrets.API_KEY_GAME_SERVER }} # 引用我們剛剛設定的 Secret
         run: |
           echo "模擬網頁檔案建置中..."
