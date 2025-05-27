@@ -71,19 +71,16 @@ jobs:
                     請密切關注我們的開發，更多精彩內容即將登場！
                 </p>
                 <p class="version">
-                    <span id="version-info">遊戲伺服器 API Key (實際應用中不會顯示): ${MY_GAME_API_KEY}</span>
+                    <span id="api-key-info">遊戲伺服器 API Key (實際應用中不會顯示): ${MY_GAME_API_KEY}</span>
                 </p>
+                <p class="version">
+                    <span id="version-timestamp"></span> </p>
                 <script>
-                    // 你可以想像這裡以後會放一些遊戲相關的 JavaScript 程式碼
-                    // 例如：載入遊戲資源、初始化遊戲引擎等等
                     console.log("網頁版遊戲測試中...");
 
-                    // 簡單的更新版本號模擬，讓你可以看到 CI/CD 效果
-                    const versionElement = document.getElementById('version-info');
-                    // 每次部署時，假設我們可以自動更新這個版本號
-                    // 實際 CI/CD 中，這部分可以透過腳本自動生成
+                    const versionTimestampElement = document.getElementById('version-timestamp'); // 獲取新的元素
                     const now = new Date();
-                    versionElement.innerText = \`測試版 \${now.getFullYear()}.\${now.getMonth() + 1}.\${now.getDate()} - \${now.getHours()}:\${now.getMinutes()}:\${now.getSeconds()}\`;
+                    versionTimestampElement.innerText = `最後部署時間: ${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()} - ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
                 </script>
             </body>
             </html>
