@@ -1,4 +1,16 @@
-- name: (模擬) 建置網頁檔案 (並嵌入版本類型與 API Key)
+name: 部署魔法森林大冒險網頁
+
+on:
+  push:
+    branches: [ main ] # 當程式碼推送到 main 分支時觸發
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # 檢查出你的儲存庫程式碼
+
+      - name: (模擬) 建置網頁檔案 (並嵌入版本類型與 API Key)
         env:
           GAME_VERSION_TYPE: "測試版" # 你可以在這裡改成 "正式版" 試試
           MY_GAME_API_KEY: ${{ secrets.API_KEY_GAME_SERVER }} # 引用我們剛剛設定的 Secret
@@ -6,75 +18,76 @@
           echo "模擬網頁檔案建置中..."
           # 使用一個Here-document (here-string) 的方式，一次性生成完整的 HTML 內容
           # 這種方式對多行內容和特殊字元的處理更可靠
+          # *** 注意：這裡的每一行（包括 <!DOCTYPE html> 到 EOF）都必須有 8 個空格的縮排 ***
           cat <<EOF > index.html
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>魔法森林大冒險 - ${GAME_VERSION_TYPE}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #e0f7fa;
-            color: #004d40;
-            margin: 0;
-        }
-        h1 {
-            color: #00796b;
-            animation: fadeIn 2s;
-        }
-        p {
-            font-size: 1.2em;
-            text-align: center;
-            max-width: 600px;
-            line-height: 1.6;
-            animation: slideIn 2s;
-        }
-        .version {
-            margin-top: 20px;
-            font-style: italic;
-            color: #26a69a;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-    </style>
-</head>
-<body>
-    <h1>歡迎來到 魔法森林大冒險！ - ${GAME_VERSION_TYPE}</h1>
-    <p>
-        這是我們遊戲的最新${GAME_VERSION_TYPE}！透過 CI/CD 自動化部署，您可以隨時體驗到最新的遊戲進度。
-        請密切關注我們的開發，更多精彩內容即將登場！
-    </p>
-    <p class="version">
-        <span id="version-info">遊戲伺服器 API Key (實際應用中不會顯示): ${MY_GAME_API_KEY}</span>
-    </p>
-    <script>
-        // 你可以想像這裡以後會放一些遊戲相關的 JavaScript 程式碼
-        // 例如：載入遊戲資源、初始化遊戲引擎等等
-        console.log("網頁版遊戲測試中...");
+            <!DOCTYPE html>
+            <html lang="zh-Hant">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>魔法森林大冒險 - ${GAME_VERSION_TYPE}</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        background-color: #e0f7fa;
+                        color: #004d40;
+                        margin: 0;
+                    }
+                    h1 {
+                        color: #00796b;
+                        animation: fadeIn 2s;
+                    }
+                    p {
+                        font-size: 1.2em;
+                        text-align: center;
+                        max-width: 600px;
+                        line-height: 1.6;
+                        animation: slideIn 2s;
+                    }
+                    .version {
+                        margin-top: 20px;
+                        font-style: italic;
+                        color: #26a69a;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes slideIn {
+                        from { transform: translateY(50px); opacity: 0; }
+                        to { transform: translateY(0); opacity: 1; }
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>歡迎來到 魔法森林大冒險！ - ${GAME_VERSION_TYPE}</h1>
+                <p>
+                    這是我們遊戲的最新${GAME_VERSION_TYPE}！透過 CI/CD 自動化部署，您可以隨時體驗到最新的遊戲進度。
+                    請密切關注我們的開發，更多精彩內容即將登場！
+                </p>
+                <p class="version">
+                    <span id="version-info">遊戲伺服器 API Key (實際應用中不會顯示): ${MY_GAME_API_KEY}</span>
+                </p>
+                <script>
+                    // 你可以想像這裡以後會放一些遊戲相關的 JavaScript 程式碼
+                    // 例如：載入遊戲資源、初始化遊戲引擎等等
+                    console.log("網頁版遊戲測試中...");
 
-        // 簡單的更新版本號模擬，讓你可以看到 CI/CD 效果
-        const versionElement = document.getElementById('version-info');
-        // 每次部署時，假設我們可以自動更新這個版本號
-        // 實際 CI/CD 中，這部分可以透過腳本自動生成
-        const now = new Date();
-        versionElement.innerText = \`測試版 \${now.getFullYear()}.\${now.getMonth() + 1}.\${now.getDate()} - \${now.getHours()}:\${now.getMinutes()}:\${now.getSeconds()}\`;
-    </script>
-</body>
-</html>
-EOF
+                    // 簡單的更新版本號模擬，讓你可以看到 CI/CD 效果
+                    const versionElement = document.getElementById('version-info');
+                    // 每次部署時，假設我們可以自動更新這個版本號
+                    // 實際 CI/CD 中，這部分可以透過腳本自動生成
+                    const now = new Date();
+                    versionElement.innerText = \`測試版 \${now.getFullYear()}.\${now.getMonth() + 1}.\${now.getDate()} - \${now.getHours()}:\${now.getMinutes()}:\${now.getSeconds()}\`;
+                </script>
+            </body>
+            </html>
+            EOF # *** 注意：EOF 這裡前面也必須有 8 個空格的縮排 ***
 
           echo "建置完成，準備部署！"
           cat index.html # 打印出最終的 index.html 內容，方便日誌查看
