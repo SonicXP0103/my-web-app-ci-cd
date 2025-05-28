@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魔法森林大冒險 - 測試版</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #e0f7fa;
+      color: #004d40;
+      margin: 0;
+    }
+    h1 {
+      color: #00796b;
+    }
+    p {
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>歡迎來到魔法森林大冒險！</h1>
+  <p>這是最新的 測試版 版本，透過 CI/CD 自動部署。</p>
+  <p id="version-time">部署時間載入中...</p>
+
+  <script>
+    // ✅ 將 API Key 透過變數插入，但不顯示在畫面上
+    const apiKey = "1234567890abcde";
+    console.log("🔐 API Key (模擬使用) :", apiKey);
+
+    // 顯示部署時間
+    const el = document.getElementById("version-time");
+    el.innerText = "部署時間：" + new Date().toLocaleString();
+  </script>
+</body>
+</html>
