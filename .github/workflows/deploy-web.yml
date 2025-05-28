@@ -1,47 +1,74 @@
-- name: 設定部署內容
-  env:
-    GAME_VERSION_TYPE: "測試版"
-    MY_GAME_API_KEY: ${{ secrets.API_KEY_GAME_SERVER }}
-  run: |
-    echo "🔧 建立部署頁面內容..."
-    cat <<EOF > index.html
-    <!DOCTYPE html>
-    <html lang="zh-Hant">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>魔法森林大冒險 - ${GAME_VERSION_TYPE}</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-          background-color: #e0f7fa;
-          color: #004d40;
-          margin: 0;
-        }
-        h1 {
-          color: #00796b;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>歡迎來到魔法森林大冒險！</h1>
-      <p>這是遊戲的${GAME_VERSION_TYPE}版本。</p>
-      <p id="version-time">部署時間載入中...</p>
+name: 部署魔法森林大冒險網頁
 
-      <script>
-        // ✅ 將敏感資訊存在 script 中，模擬只有 JS 可存取
-        const apiKey = "${MY_GAME_API_KEY}";
-        console.log("🔐 開發用 API Key（只在 console 可見）:", apiKey);
+on:
+  push:
+    branches: [ main ] # 當 main 分支有 push 時觸發
 
-        // ✅ 顯示部署時間
-        const el = document.getElementById("version-time");
-        el.innerText = "部署時間：" + new Date().toLocaleString();
-      </script>
-    </body>
-    </html>
-    EOF
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 下載原始碼
+        uses: actions/checkout@v4
+
+      - name: 建立部署 HTML 頁面（模擬隱藏 API Key）
+        env:
+          GAME_VERSION_TYPE: "測試版"
+          MY_GAME_API_KEY: ${{ secrets.API_KEY_GAME_SERVER }}
+        run: |
+          echo "🔧 建立 HTML 檔案..."
+          cat <<EOF > index.html
+          <!DOCTYPE html>
+          <html lang="zh-Hant">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>魔法森林大冒險 - ${GAME_VERSION_TYPE}</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background-color: #e0f7fa;
+                color: #004d40;
+                margin: 0;
+              }
+              h1 {
+                color: #00796b;
+              }
+              p {
+                font-size: 1.1em;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>歡迎來到魔法森林大冒險！</h1>
+            <p>這是最新的 ${GAME_VERSION_TYPE} 版本，透過 CI/CD 自動部署。</p>
+            <p id="version-time">部署時間載入中...</p>
+
+            <script>
+              // ✅ 將 API Key 透過變數插入，但不顯示在畫面上
+              const apiKey = "${MY_GAME_API_KEY}";
+              console.log("🔐 API Key (模擬使用) :", apiKey);
+
+              // 顯示部署時間
+              const el = document.getElementById("version-time");
+              el.innerText = "部署時間：" + new Date().toLocaleString();
+            </script>
+          </body>
+          </html>
+          EOF
+
+      - name: 建立 .nojekyll
+        run: echo > .nojekyll
+
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
