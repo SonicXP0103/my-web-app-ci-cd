@@ -2,88 +2,26 @@ name: 部署魔法森林大冒險網頁
 
 on:
   push:
-    branches: [ main ] # 只要 push 到 main 就會觸發部署
+    branches: [ main ] # 當 main 分支有 push 時觸發
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 下載原始碼
+        uses: actions/checkout@v4
 
-      - name: 建立 HTML 頁面
-        env:
-          GAME_VERSION_TYPE: "測試版"
-          MY_GAME_API_KEY: ${{ secrets.API_KEY_GAME_SERVER }}
+      - name: 設定部署內容（保留原始 index.html）
         run: |
-          echo "🔧 建置網頁內容..."
-          cat <<EOF > index.html
-          <!DOCTYPE html>
-          <html lang="zh-Hant">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>魔法森林大冒險 - ${GAME_VERSION_TYPE}</title>
-              <style>
-                  body {
-                      font-family: Arial, sans-serif;
-                      display: flex;
-                      flex-direction: column;
-                      justify-content: center;
-                      align-items: center;
-                      min-height: 100vh;
-                      background-color: #e0f7fa;
-                      color: #004d40;
-                      margin: 0;
-                  }
-                  h1 {
-                      color: #00796b;
-                      animation: fadeIn 2s;
-                  }
-                  p {
-                      font-size: 1.2em;
-                      text-align: center;
-                      max-width: 600px;
-                      line-height: 1.6;
-                      animation: slideIn 2s;
-                  }
-                  .version {
-                      margin-top: 20px;
-                      font-style: italic;
-                      color: #26a69a;
-                  }
-                  @keyframes fadeIn {
-                      from { opacity: 0; }
-                      to { opacity: 1; }
-                  }
-                  @keyframes slideIn {
-                      from { transform: translateY(50px); opacity: 0; }
-                      to { transform: translateY(0); opacity: 1; }
-                  }
-              </style>
-          </head>
-          <body>
-              <h1>歡迎來到 魔法森林大冒險！ - ${GAME_VERSION_TYPE}</h1>
-              <p>
-                  這是我們遊戲的最新${GAME_VERSION_TYPE}！透過 CI/CD 自動化部署，您可以隨時體驗到最新的遊戲進度。
-              </p>
-              <p class="version">
-                  API Key（開發用）：${MY_GAME_API_KEY}
-              </p>
-              <p class="version">
-                  <span id="version-time"></span>
-              </p>
-              <script>
-                  const el = document.getElementById('version-time');
-                  const now = new Date();
-                  el.innerText = "部署時間：" + now.toLocaleString();
-              </script>
-          </body>
-          </html>
-          EOF
+          echo "✅ 使用原始 index.html，不覆蓋"
+
+      - name: 建立 .nojekyll
+        run: echo > .nojekyll
 
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
+          publish_branch: gh-pages
